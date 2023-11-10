@@ -29,7 +29,7 @@ class Figure3D:
         image = ax.plot_surface(X, Y, Z, linestyles="solid", cmap='plasma', alpha=alpha)
         fig.colorbar(image, shrink=0.5, aspect=10, pad=0.05)
 
-        alpha = 1 if descent == {} else 0.2
+        alpha = 0.4 if descent == {} else 0.2
         ax.contourf(X, Y, Z, zdir='z', offset=-2.5, cmap='plasma', alpha=alpha)
         
         if descent != {}:
