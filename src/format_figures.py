@@ -37,9 +37,9 @@ def format_figure_3d(ax, parameters: Dict = {}):
     ax.yaxis.set_pane_color((0.5, 0.5, 0.5, 0.1))
     ax.zaxis.set_pane_color((0.5, 0.5, 0.5, 0.1))
 
-    ax.xaxis._axinfo["grid"]['color'] =  (1, 1, 1, 0.5)
-    ax.yaxis._axinfo["grid"]['color'] =  (1, 1, 1, 0.5)
-    ax.zaxis._axinfo["grid"]['color'] =  (1, 1, 1, 0.5)
+    ax.xaxis._axinfo["grid"]['color'] = (1, 1, 1, 0.5)
+    ax.yaxis._axinfo["grid"]['color'] = (1, 1, 1, 0.5)
+    ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0.5)
 
     ax.set_title(parameters.get("title", "Dimension 2"))
         

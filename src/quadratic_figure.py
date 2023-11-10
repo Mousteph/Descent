@@ -22,7 +22,7 @@ class Quadratic(FunctionFigure):
         gamma = parameters.get('gamma')
         
         Z = self.function(X, gamma[0]) + self.function(Y, gamma[1])
-
+        print(X.shape, Y.shape, Z.shape)
         ax.contour(X, Y, Z, 100, cmap='plasma', alpha=(1 if descent == {} else 0.5))
 
         if descent != {}:
