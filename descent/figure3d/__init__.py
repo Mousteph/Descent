@@ -3,6 +3,7 @@ from .quadratic_3d import Quadratic3D
 from .cubic_3d import Cubic3D
 from .multitrous_3d import Multitrous3D
 from .quadratic_n import QuadraticN
+from .rosenbrock import Rosenbrock
 
 __all__ = [
     "Figure3D",
@@ -10,4 +11,5 @@ __all__ = [
     "Cubic3D",
     "Multitrous3D",
     "QuadraticN",
+    "Rosenbrock",
 ]
