@@ -7,13 +7,6 @@ This project aims to display any function $R \rightarrow R$ or $R^2 \rightarrow 
 ## Figures
 
 Some functions have already been implemented and can be use as followed.
-```python
-from descent.figure3d import Quadratic3D
-
-quadratic_3d = Quadratic3D()
-quadratic_3d.figure()
-```
-![Quadratic3D](./images/quadratic3d.png)
 
 ```python
 from descent.figure3d import Cubic3D
@@ -25,7 +18,7 @@ cubic_3d.figure(X, plot_contour=True)
 ```
 ![Cubic3D](./images/cubic3d.png)
 
-3 $R \rightarrow R$ functions have been implemented:
+### Some $R \rightarrow R$ functions have been implemented:
 
 This function can be used as followed:
 ```python
@@ -37,7 +30,7 @@ multitrous_2d = Multitrous2D()
 ```
 ![Figure2D](./images/figure2d.png)
 
-3 $R^2 \rightarrow R$ functions have been implemented:
+### Some $R^2 \rightarrow R$ functions have been implemented:
 
 This function can be used as followed:
 ```python
@@ -172,20 +165,58 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 
 You can add your own figures and try different gradient descent methods on it simply by creating a new class that inherits from the Figure class.
 
+
+#### $R \rightarrow R$ function
+
+```python
+import numpy as np
+from descent.figure2d import Figure2D
+from descent.gradient import GradientDescentL1Optimisation
+
+
+class MyFigure2D(Figure2D):
+    def __name__(self) -> str:
+        return "MyFigure2D"
+
+    def __init__(self, alpha: float = 0.0):
+        self.alpha = alpha
+
+    def function(self, x: np.array) -> np.array:
+        return np.sin(x) + np.cos(x) + self.alpha
+
+my_figure = MyFigure2D(1)
+
+x0 = np.array([0])
+opti = GradientDescentL1Optimisation()
+
+res_opti = opti(my_figure, x0)
+
+descents = {
+    "gd_l1": res_opti,
+}
+
+my_figure.figure(descent=descents)
+```
+
+![MyFigure](./images/my_figure2d.png)
+
+
+#### $R^2 \rightarrow R$ function
+
 ```python
 import numpy as np
 from descent.figure3d import Figure3D
 from descent.gradient import GradientDescentL1Optimisation
 
 
-class MyFigure(Figure3D):
+class MyFigure3D(Figure3D):
     def __name__(self) -> str:
         return "MyFigure"
 
     def function(self, x: np.array) -> np.array:
         return np.sin(x[0]) + np.cos(x[1])
 
-my_figure = MyFigure()
+my_figure = MyFigure3D()
 
 x0 = np.array([1.5, 0])
 opti = GradientDescentL1Optimisation()
@@ -199,4 +230,4 @@ descents = {
 my_figure.figure(plot_contour=True, descent=descents)
 ```
 
-![MyFigure](./images/my_figure.png)
+![MyFigure](./images/my_figure3d.png)
