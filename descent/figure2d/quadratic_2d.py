@@ -4,7 +4,7 @@ from .figure_2d import Figure2D
 
 class Quadratic2D(Figure2D):
     def __name__(self):
-        return f"Quadratic: gamma {self.gamma}"
+        return f"Quadratic2D: gamma({self.gamma})"
 
     def __init__(self, gamma: float = 1):
         self.gamma = gamma

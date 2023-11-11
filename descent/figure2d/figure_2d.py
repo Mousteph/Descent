@@ -30,6 +30,7 @@ class Figure2D:
         _, ax = plt.subplots(1, 1, figsize=(12, 6))
         
         ax = self.plot_figure(ax, x, descent)
-        ax = format_figure_2d(ax)
+        title = self.__name__()
+        ax = format_figure_2d(ax, parameters={"title": title})
         
         plt.show()

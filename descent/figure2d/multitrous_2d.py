@@ -5,7 +5,7 @@ from .figure_2d import Figure2D
 
 class Multitrous2D(Figure2D):
     def __name__(self) -> str:
-        return f"Multitrous: gamma {self.gamma}"
+        return f"Multitrous2D: gamma({self.gamma})"
     
     def __init__(self, gamma: float = 1.0):
         self.gamma = gamma
