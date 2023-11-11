@@ -24,7 +24,7 @@ class Figure3D:
         
         return X, Y, Z
     
-    def plot_figure_3d(self, fig, ax, x: np.array = None, descent: Dict = {}, shrink=1):
+    def plot_figure_3d(self, fig, ax, x: np.array = None, descent: Dict = {}, shrink: int = 1):
         if x is None:
             x = np.linspace(-5, 5, 100)
             x = np.stack((x, x), axis=-1)
@@ -33,8 +33,7 @@ class Figure3D:
         
         alpha = 1 if descent == {} else 0.3
         image = ax.plot_surface(X, Y, Z, linestyles="solid", cmap='plasma', alpha=alpha)
-        # fig.colorbar(image, shrink=0.5, aspect=10, pad=0.05, orientation="horizontal")
-        fig.colorbar(image, shrink=shrink, aspect=20, pad=0.1, orientation="horizontal")
+        fig.colorbar(image, shrink=shrink, aspect=35, pad=0.05, orientation="horizontal")
 
         alpha = 0.4 if descent == {} else 0.2
         ax.contourf(X, Y, Z, zdir='z', offset=-2.5, cmap='plasma', alpha=alpha)
@@ -79,7 +78,7 @@ class Figure3D:
         
         if plot_3d:
             ax = fig.add_subplot(1, 1 + plot_contour, 1 + plot_contour, projection='3d')
-            fig, ax = self.plot_figure_3d(fig, ax, x, descent, shrink=(1 / (2 - plot_contour)))
+            fig, ax = self.plot_figure_3d(fig, ax, x, descent, shrink=(0.9 / (2 - plot_contour)))
             ax = format_figure_3d(ax)
 
         plt.show()
