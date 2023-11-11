@@ -4,6 +4,7 @@ from .cubic_3d import Cubic3D
 from .multitrous_3d import Multitrous3D
 from .quadratic_n import QuadraticN
 from .rosenbrock import Rosenbrock
+from .helpers import format_figure_3d
 
 __all__ = [
     "Figure3D",
@@ -12,4 +13,5 @@ __all__ = [
     "Multitrous3D",
     "QuadraticN",
     "Rosenbrock",
+    "format_figure_3d",
 ]

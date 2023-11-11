@@ -12,12 +12,12 @@ class Rosenbrock(Figure3D):
 
         return f"Rosenbrock: gamma({self.gamma})"
     
-    def __init__(self, gamma: float):
+    def __init__(self, gamma: float = 1):
         """
         Initializes the Rosenbrock with the given gamma.
 
         Args:
-            gamma (float): The gamma value.
+            gamma (float): The gamma value. Defaults to 1.
         """
         
         self.gamma = gamma
