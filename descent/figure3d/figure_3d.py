@@ -1,22 +1,61 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from typing import Tuple, Dict
 
 from .helpers import format_figure_3d, format_figure_contour_2d
 
 class Figure3D:
-    def __name__(self):
+    def __name__(self) -> str:
+        """
+        Returns the name of the class.
+
+        Returns:
+            str: The name of the class.
+        """
+
         return "Figure3D"
 
     def __call__(self, x: np.array) -> np.array:
+        """
+        Calls the function method with the given x.
+
+        Args:
+            x (np.array): The input array.
+
+        Returns:
+            np.array: The output array after applying the function.
+        """
+        
         return self.function(x)
     
     def function(self, x: np.array) -> np.array:
+        """
+        Returns the sum of the input array along the last axis.
+
+        Args:
+            x (np.array): The input array.
+
+        Returns:
+            np.array: The sum of the input array along the last axis.
+        """
+        
         return x.sum(axis=-1)
 
     def calculate_xyz(self, x: np.array) -> Tuple[np.array, np.array, np.array]:
+        """
+        Calculates the X, Y, and Z values for the given x.
+
+        Args:
+            x (np.array): The input array.
+
+        Returns:
+            Tuple[np.array, np.array, np.array]: The X, Y, and Z values.
+        """
+
         X, Y = np.meshgrid(x[:, 0], x[:, 1])
         Z = np.empty(X.shape)
         for i in range(X.shape[0]):
@@ -25,7 +64,22 @@ class Figure3D:
         
         return X, Y, Z
     
-    def plot_figure_3d(self, fig, ax, x: np.array = None, descent: Dict = {}, shrink: int = 1):
+    def plot_figure_3d(self, fig: Figure, ax: Axes, x: np.array = None,
+                       descent: Dict = {}, shrink: int = 1) -> Tuple[Figure, Axes]:
+        """
+        Plots the 3D figure on the given axes.
+
+        Args:
+            fig (Figure): The figure on which to plot.
+            ax (Axes): The axes on which to plot.
+            x (np.array, optional): The input array. Defaults to None.
+            descent (Dict, optional): The descent values. Defaults to {}.
+            shrink (int, optional): The shrink factor for the colorbar. Defaults to 1.
+
+        Returns:
+            Tuple[Figure, Axes]: The figure and axes with the plotted 3D figure.
+        """
+
         if x is None:
             x = np.linspace(-5, 5, 100)
             x = np.stack((x, x), axis=-1)
@@ -52,7 +106,19 @@ class Figure3D:
 
         return fig, ax
 
-    def plot_figure_contour(self, ax, x: np.array = None, descent: Dict = {}):
+    def plot_figure_contour(self, ax: Axes, x: np.array = None, descent: Dict = {}) -> Axes:
+        """
+        Plots the contour figure on the given axes.
+
+        Args:
+            ax (Axes): The axes on which to plot.
+            x (np.array, optional): The input array. Defaults to None.
+            descent (Dict, optional): The descent values. Defaults to {}.
+
+        Returns:
+            Axes: The axes with the plotted contour figure.
+        """
+
         if x is None:
             x = np.linspace(-5, 5, 100)
             x = np.stack((x, x), axis=-1)
@@ -74,7 +140,17 @@ class Figure3D:
     
     def figure(self, x: np.array = None, plot_3d: bool = True, plot_contour: bool = False,
                descent: Dict = {}, view: Tuple[int, int] = None):
+        """
+        Plots the figure with optional 3D and contour plots.
 
+        Args:
+            x (np.array, optional): The input array. Defaults to None.
+            plot_3d (bool, optional): Whether to plot in 3D. Defaults to True.
+            plot_contour (bool, optional): Whether to plot the contour. Defaults to False.
+            descent (Dict, optional): The descent values. Defaults to {}.
+            view (Tuple[int, int], optional): The view angles. Defaults to None.
+        """
+        
         colors = list(mcolors.TABLEAU_COLORS.keys())[:len(descent)]
         descent = {key: (values, colors[i]) for i, (key, values) in enumerate(descent.items())}
         
