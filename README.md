@@ -18,7 +18,7 @@ cubic_3d.figure(X, plot_contour=True)
 ```
 ![Cubic3D](./images/cubic3d.png)
 
-### Some $R \rightarrow R$ functions have been implemented:
+**Some $R \rightarrow R$ functions have been implemented:**
 
 This function can be used as followed:
 ```python
@@ -30,7 +30,7 @@ multitrous_2d = Multitrous2D()
 ```
 ![Figure2D](./images/figure2d.png)
 
-### Some $R^2 \rightarrow R$ functions have been implemented:
+**Some $R^2 \rightarrow R$ functions have been implemented:**
 
 This function can be used as followed:
 ```python
