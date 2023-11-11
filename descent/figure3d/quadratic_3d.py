@@ -5,7 +5,7 @@ from .figure_3d import Figure3D
 
 class Quadratic3D(Figure3D):
     def __name__(self):
-        return f"Quadratic3D: gamma {self.gamma}"
+        return f"Quadratic3D: gamma({self.gamma})"
 
     def __init__(self, gamma: np.array = np.array([1, 1])):
         self.gamma = gamma

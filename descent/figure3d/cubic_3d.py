@@ -5,7 +5,7 @@ from .figure_3d import Figure3D
 
 class Cubic3D(Figure3D):
     def __name__(self) -> str:
-        return f"Cubic: gamma {self.gamma}"
+        return f"Cubic3D: gamma({self.gamma})"
     
     def __init__(self, gamma: np.array = np.array([1, 1])):
         self.gamma = gamma

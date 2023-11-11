@@ -5,7 +5,7 @@ from .figure_3d import Figure3D
 
 class QuadraticN(Figure3D):
     def __name__(self) -> str:
-        return f"QuadraticN: {self.A.shape[0]}"
+        return f"QuadraticN({self.A.shape[0]})"
     
     def __init__(self, A: np.array, b: np.array):
         self.A = A

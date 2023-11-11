@@ -74,11 +74,13 @@ class Figure3D:
         if plot_contour:
             ax = fig.add_subplot(1, 1 + plot_3d, 1)
             ax = self.plot_figure_contour(ax, x, descent)
-            ax = format_figure_contour_2d(ax)
+            title = f"Contour {self.__name__()}"
+            ax = format_figure_contour_2d(ax, parameters={"title": title})
         
         if plot_3d:
             ax = fig.add_subplot(1, 1 + plot_contour, 1 + plot_contour, projection='3d')
             fig, ax = self.plot_figure_3d(fig, ax, x, descent, shrink=(0.9 / (2 - plot_contour)))
-            ax = format_figure_3d(ax)
+            title = f"Surface {self.__name__()}"
+            ax = format_figure_3d(ax, parameters={"title": title})
 
         plt.show()

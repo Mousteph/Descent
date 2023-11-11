@@ -5,7 +5,7 @@ from .figure_3d import Figure3D
 
 class Rosenbrock(Figure3D):
     def __name__(self) -> str:
-        return f"Rosenbrock: gamma {self.gamma}"
+        return f"Rosenbrock: gamma({self.gamma})"
     
     def __init__(self, gamma: float):
         self.gamma = gamma

@@ -5,7 +5,7 @@ from .figure_3d import Figure3D
 
 class Multitrous3D(Figure3D):
     def __name__(self) -> str:
-        return f"Multitrous: gamma {self.gamma}"
+        return f"Multitrous3D: gamma({self.gamma})"
     
     def __init__(self, gamma: np.array = np.array([1, 1])):
         self.gamma = gamma
