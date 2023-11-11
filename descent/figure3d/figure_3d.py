@@ -39,7 +39,9 @@ class Figure3D:
             for key, values in descent.items():
                 x_value = values[:, 0]
                 y_value = values[:, 1]
-                z_value = self.function(values)
+                z_value = np.array([self.function(np.array([x_value[i], y_value[i]])) 
+                                        for i in range(x_value.shape[0])])
+                
                 ax.plot(x_value, y_value, z_value, label=key, marker='x', markersize=1.3, linewidth=1)
         
         return fig, ax
