@@ -14,7 +14,10 @@ class Figure3D:
 
     def calculate_xyz(self, x: np.array) -> Tuple[np.array, np.array, np.array]:
         X, Y = np.meshgrid(x[:, 0], x[:, 1])
-        Z = self.function(np.stack((X, Y), axis=-1))
+        Z = np.empty(X.shape)
+        for i in range(X.shape[0]):
+            for j in range(X.shape[1]):
+                Z[i, j] = self.function(np.array([X[i, j], Y[i, j]]))
         
         return X, Y, Z
     
