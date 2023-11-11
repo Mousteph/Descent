@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 from typing import Tuple, Dict
 
@@ -39,14 +40,16 @@ class Figure3D:
         ax.contourf(X, Y, Z, zdir='z', offset=-2.5, cmap='plasma', alpha=alpha)
         
         if descent != {}:
-            for key, values in descent.items():
+            for key, (values, color) in descent.items():
                 x_value = values[:, 0]
                 y_value = values[:, 1]
                 z_value = np.array([self.function(np.array([x_value[i], y_value[i]])) 
                                         for i in range(x_value.shape[0])])
                 
-                ax.plot(x_value, y_value, z_value, label=key, marker='x', markersize=1.3, linewidth=1)
-        
+                ax.plot(x_value, y_value, z_value, color=color, label=key, marker='x', markersize=1.3, linewidth=1)
+            
+            ax.legend()
+
         return fig, ax
 
     def plot_figure_contour(self, ax, x: np.array = None, descent: Dict = {}):
@@ -60,15 +63,21 @@ class Figure3D:
         ax.contour(X, Y, Z, 100, cmap='plasma', alpha=alpha)
         
         if descent != {}:
-            for key, values in descent.items():
+            for key, (values, color) in descent.items():
                 x_value = values[:, 0]
                 y_value = values[:, 1]
-                ax.plot(x_value, y_value, label=key, marker='x', markersize=1.3, linewidth=1)
+                ax.plot(x_value, y_value, color=color, label=key, marker='x', markersize=1.3, linewidth=1)
+            
+            ax.legend()
 
         return ax
     
     def figure(self, x: np.array = None, plot_3d: bool = True, plot_contour: bool = False,
                descent: Dict = {}, view: Tuple[int, int] = None):
+
+        colors = list(mcolors.TABLEAU_COLORS.keys())[:len(descent)]
+        descent = {key: (values, colors[i]) for i, (key, values) in enumerate(descent.items())}
+        
         fig = plt.figure(figsize=(12, 6))
 
         if plot_contour:
