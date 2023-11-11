@@ -9,6 +9,9 @@ from .helpers import format_figure_2d
 class Figure2D:
     def __name__(self):
         return "Figure2D"
+
+    def __call__(self, x: np.array) -> np.array:
+        return self.function(x)
     
     def function(self, x: np.array) -> np.array:
         return x

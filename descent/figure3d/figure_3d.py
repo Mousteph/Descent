@@ -8,6 +8,9 @@ from .helpers import format_figure_3d, format_figure_contour_2d
 class Figure3D:
     def __name__(self):
         return "Figure3D"
+
+    def __call__(self, x: np.array) -> np.array:
+        return self.function(x)
     
     def function(self, x: np.array) -> np.array:
         return x.sum(axis=-1)
