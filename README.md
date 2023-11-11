@@ -166,7 +166,7 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 You can add your own figures and try different gradient descent methods on it simply by creating a new class that inherits from the Figure class.
 
 
-#### $R \rightarrow R$ function
+**$R \rightarrow R$ function**
 
 ```python
 import numpy as np
@@ -201,7 +201,7 @@ my_figure.figure(descent=descents)
 ![MyFigure](./images/my_figure2d.png)
 
 
-#### $R^2 \rightarrow R$ function
+**$R^2 \rightarrow R$ function**
 
 ```python
 import numpy as np
