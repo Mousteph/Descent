@@ -1,13 +1,36 @@
 from .gradient_descent import GradientDescent
-
+from typing import Callable
 import numpy as np
 
-
 class GradientDescentConstant(GradientDescent):
-    def __name__(self):
+    def __name__(self) -> str:
+        """
+        Returns the name of the class with the last mu value.
+
+        Returns:
+            str: The name of the class with the last mu value.
+        """
+
         return f"{self.__class__.__name__}({self.__last_mu})"
         
-    def __call__(self, f, pk, mu=0.001, eps=1E-6, max_iter=10000, detect_div=10e5):
+    def __call__(self, f: Callable[[np.array], float], pk: np.array, 
+                 mu: float = 0.001, eps: float = 1E-6,
+                 max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
+        """
+        Performs the gradient descent with a constant step size.
+
+        Args:
+            f (Callable[[np.array], float]): The function to minimize.
+            pk (np.array): The initial point.
+            mu (float, optional): The step size. Defaults to 0.001.
+            eps (float, optional): The precision. Defaults to 1E-6.
+            max_iter (int, optional): The maximum number of iterations. Defaults to 10000.
+            detect_div (float, optional): The divergence detection value. Defaults to 10e5.
+
+        Returns:
+            np.array: The array of points visited during the gradient descent.
+        """
+
         self.__last_mu = mu
         
         pk1 = pk - mu * self.gradient(f, pk)
