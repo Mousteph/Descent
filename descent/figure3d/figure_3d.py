@@ -68,7 +68,7 @@ class Figure3D:
         return ax
     
     def figure(self, x: np.array = None, plot_3d: bool = True, plot_contour: bool = False,
-               descent: Dict = {}):
+               descent: Dict = {}, view: Tuple[int, int] = None):
         fig = plt.figure(figsize=(12, 6))
 
         if plot_contour:
@@ -80,7 +80,10 @@ class Figure3D:
         if plot_3d:
             ax = fig.add_subplot(1, 1 + plot_contour, 1 + plot_contour, projection='3d')
             fig, ax = self.plot_figure_3d(fig, ax, x, descent, shrink=(0.9 / (2 - plot_contour)))
-            title = f"Surface {self.__name__()}"
-            ax = format_figure_3d(ax, parameters={"title": title})
+            parameters = {
+                "title": f"Surface {self.__name__()}",
+                "view": view,
+            }
+            ax = format_figure_3d(ax, parameters=parameters)
 
         plt.show()
