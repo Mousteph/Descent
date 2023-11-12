@@ -293,43 +293,48 @@ You can plot the different gradient descent methods on the same figure as follow
 
 ```python
 import numpy as np
+from descent.figure3d import QuadraticN
 from descent.gradient import GradientDescentConstant
 from descent.gradient import GradientDescentOptimalStep
 from descent.gradient import GradientDescentL1Optimisation
 from descent.gradient import GradientDescentFletcherReeves
-from descent.gradient import GradientDescentPolackRibiere
+from descent.gradient import GradientDescentPolackRibiere 
+from descent.functions import create_system
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+A, b = create_system(2, 3)
+x_exact = np.ones(2, dtype=np.float64)
+b = A @ x_exact
+x0 = np.zeros(2, dtype=np.float64)
 
-x0 = np.array([0, 2])
-mu = 0.00001
+quadratic_n = QuadraticN(A, b)
 
 gd_constant = GradientDescentConstant()
-res_gd_constant = gd_constant(rosenbrock, x0, mu)
+res_constant = gd_constant(quadratic_n, x0, mu = 0.9 / 1000)
 
 gd_optimal = GradientDescentOptimalStep()
-res_gd_optimal = gd_optimal(rosenbrock, x0)
+res_optimal = gd_optimal(quadratic_n, x0)
 
 gd_l1 = GradientDescentL1Optimisation()
-res_gd_l1 = gd_l1(rosenbrock, x0)
+res_l1 = gd_l1(quadratic_n, x0)
 
-gd_fletcherR = GradientDescentFletcherReeves()
-res_gd_fr = gd_fletcherR(rosenbrock, x0)
+gd_fr = GradientDescentFletcherReeves()
+res_fr = gd_fr(quadratic_n, x0)
 
-gd_polackR = GradientDescentPolackRibiere()
-res_gd_pr = gd_polackR(rosenbrock, x0)
+gd_pr = GradientDescentPolackRibiere()
+res_pr = gd_pr(quadratic_n, x0)
 
-descents = {
-    "gd_constant": res_gd_constant,
-    "gd_optimal": res_gd_optimal,
-    "gd_l1": res_gd_l1,
-    "gd_fletcherR": res_gd_fr,
-    "gd_polackR": res_gd_pr,
+x, y = np.linspace(-0.1, 1.1, 150), np.linspace(-0.1, 1.3, 150)
+X = np.stack((x, y), axis=-1)
+
+descent = {
+    'constant': res_constant,
+    'optimal': res_optimal,
+    'l1': res_l1,
+    'FletcherR': res_fr,
+    'PolackR': res_pr
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+quadratic_n.figure(X, descent=descent, plot_contour=True, view=(30, 30))
 ```
 
 ![GradientDescentComparison](./images/all_opti.png)
