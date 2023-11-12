@@ -9,6 +9,7 @@ This project aims to display any function $R \rightarrow R$ or $R^2 \rightarrow 
 Some functions have already been implemented and can be use as followed.
 
 ```python
+import numpy as np
 from descent.figure3d import Cubic3D
 
 cubic_3d = Cubic3D(np.array([10, 10]))
@@ -67,7 +68,9 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 
 ```python
+import numpy as np
 from descent.gradient import GradientDescentConstant
+from descent.figure3d import Rosenbrock
 
 x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
 x = np.stack((x, y), axis=-1)
@@ -122,7 +125,9 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 #### Usage
 
 ```python
+import numpy as np
 from descent.gradient import GradientDescentOptimalStep
+from descent.figure3d import Rosenbrock
 
 x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
 x = np.stack((x, y), axis=-1)
@@ -155,7 +160,7 @@ ${\bf d}_k = -\langle \nabla J({\bf p}_k),e_i \rangle e_i$
 
 where $i$ is the smallest index such that:
 
-$\left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}$
+$$\left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}$$
 
 #### Algorithm
 
@@ -173,7 +178,9 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 
 ```python
+import numpy as np
 from descent.gradient import GradientDescentL1Optimisation
+from descent.figure3d import Rosenbrock
 
 x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
 x = np.stack((x, y), axis=-1)
@@ -199,6 +206,7 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 You can plot the different gradient descent methods on the same figure as followed:
 
 ```python
+import numpy as np
 from descent.gradient import GradientDescentConstant
 from descent.gradient import GradientDescentOptimalStep
 from descent.gradient import GradientDescentL1Optimisation
