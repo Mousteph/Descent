@@ -52,6 +52,20 @@ Different gradient descent methods have been implemented and can be used.
 
 ### Gradient descent with fixed step
 
+#### Algorithm
+
+To implement Gradient Descent with a fixed step, we begin by selecting a constant step size, denoted as $\mu$, and choose an initial point ${\bf p}_0$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
+2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+
+#### Usage
+
+
 ```python
 from descent.gradient import GradientDescentConstant
 
@@ -76,6 +90,37 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 
 ### Gradient descent with backtracking, Armijo rule
 
+To enhance the convergence of the algorithm, we introduce a variable step size $\mu$ using the Armijo rule.
+
+#### Mathematical Background
+
+To ensure the convergence of the sequence $J({\bf p}_k)$, we impose a decrease in its value. The Armijo rule introduces two parameters, $0 < \alpha < 0.5$ and $0 < \beta < 1$.
+
+We seek a $\mu$ that satisfies the Armijo condition:
+
+$$ J({\bf p}_k+\mu {\bf d}_k) < J({\bf p}_k) + \alpha \, \mu \, {\bf d}_k ^T \, \nabla J({\bf p}_k) \quad (1). $$
+
+A suitable $\mu$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \, \nabla J({\bf p}_k) \, <\, 0$.
+
+The Armijo Rule is implemented as follows:
+
+1. Start with an initial value $\mu = 1$.
+2. While condition $(1)$ is not satisfied:
+   - Adjust $\mu$ to $\beta \, \mu$.
+
+#### Algorithm
+
+The algorithm is the same as the one with a fixed step, except for the step size $\mu$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
+2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
+3. Compute the step size $\mu$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+#### Usage
+
 ```python
 from descent.gradient import GradientDescentOptimalStep
 
@@ -99,6 +144,32 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 
 
 ### Gradient descent with L1 optimization
+
+#### Mathematical Background
+
+In L1 optimization, the descent direction is not necessarily $-\nabla J({\bf p_k})$; instead, it is another direction $d_k$ that satisfies $\langle \nabla J({\bf p_k}) , d_k \rangle < 0$ for descent (not ascent).
+
+Here, we choose the steepest descent in the case of the $\ell_1$ norm: the descent direction $d_k$ follows the vector of the canonical basis with the highest partial derivative in absolute value.
+
+$ {\bf d}_k = -\langle \nabla J({\bf p}_k),e_i \rangle \, e_i $
+
+where $i$ is the smallest index such that:
+
+$ \left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}  $
+
+#### Algorithm
+
+The algorithm is the same as the one with an optimal step, except for the descent direction ${\bf d}_k$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
+2. Choose a descent direction ${\bf d}_k$ = $-\langle \nabla J({\bf p}_k),e_i \rangle \, e_i$.
+3. Compute the step size $\mu$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+
+#### Usage
 
 
 ```python

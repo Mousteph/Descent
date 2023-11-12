@@ -5,6 +5,8 @@ def partial(f: Callable[[np.array], float], x: np.array, i: int = 0, dx: float =
     """
     Calculates the partial derivative of the function at the given point.
 
+    f'(x) = (f(x + h) - f(x - h)) / (2 * h)
+
     Args:
         f (Callable[[np.array], float]): The function to differentiate.
         x (np.array): The point at which to differentiate.
