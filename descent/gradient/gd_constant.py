@@ -38,7 +38,7 @@ class GradientDescentConstant(GradientDescent):
         points = [x0]
         i = 0
         
-        while i < max_iter and (norm >= eps and norm <= detect_div):
+        while i < max_iter and (eps <= norm <= detect_div):
             dk = -gradient(f, pk)
             pk1, pk = pk, pk + mu * dk
             
