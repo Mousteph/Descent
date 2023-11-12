@@ -1,16 +1,17 @@
 from .gd_optimal_step import GradientDescentOptimalStep
 import numpy as np
-from .helpers import gradient
 from typing import Callable
+from .helpers import gradient
 
 
-class GradientDescentFletcherReeves(GradientDescentOptimalStep):
+class GradientDescentPolackRibiere(GradientDescentOptimalStep):
     def __init__(self):
         super().__init__()
         self.__last_grad = (None, None)
 
     def __get_last_grad(self, f: Callable[[np.array], float], xk: np.array) -> np.array:
-        """A function to get the last gradient.
+        """
+        Get the last gradient.
 
         Args:
             f (Callable[[np.array], float]): Function to compute the gradient.
@@ -24,11 +25,11 @@ class GradientDescentFletcherReeves(GradientDescentOptimalStep):
             return self.__last_grad[1]
         
         return gradient(f, xk)
-        
+    
     def gradient_compose(self, f: Callable[[np.array], float], xk: np.array,
-                               x0: np.array, dk: np.array) -> np.array:
+                         x0: np.array, dk: np.array) -> np.array:
         """
-        Compute the gradient composition for Fletcher-Reeves method.
+        Compute the gradient composition for Polack-Ribiere method.
 
         Args:
             f (Callable[[np.array], float]): The function to optimize.
@@ -40,18 +41,19 @@ class GradientDescentFletcherReeves(GradientDescentOptimalStep):
             np.array: The new direction for the next step in the optimization process.
         """
 
-        grad = gradient(f, xk)
-        grad_x0 = self.__get_last_grad(f, x0)
-        dk = -grad + (np.linalg.norm(grad) ** 2 / np.linalg.norm(grad_x0)**2) * dk
-
-        self.__last_grad = (xk, grad)
+        gradxk = gradient(f, xk)
+        gradx0 = self.__get_last_grad(f, x0)
+    
+        dk = -gradxk + ((gradxk.T @ (gradxk - gradx0)) / np.linalg.norm(gradx0)**2) * dk
+        
+        self.__last_grad = (xk, gradxk)
         
         return dk
     
-    def __call__(self, f: Callable[[np.array], float], x0: np.array, eps: float = 1E-6,
-                 max_iter: int = 10000, detect_div: float = 10e5):
+    def __call__(self, f: Callable[[np.array], float], x0: np.array,
+                 eps: float = 1E-6, max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
         """
-        Perform the optimization process using the Fletcher-Reeves method.
+        Perform the optimization process using the Polack-Ribiere method.
 
         Args:
             f (Callable[[np.array], float]): The function to optimize.
@@ -63,7 +65,7 @@ class GradientDescentFletcherReeves(GradientDescentOptimalStep):
         Returns:
             np.array: The points visited during the optimization process.
         """
-
+        
         dk = -gradient(f, x0)
         mu = self.backtrack(x0, f, dk)
         pk1, pk = x0, x0 + mu * dk
