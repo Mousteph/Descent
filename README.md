@@ -60,7 +60,7 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
 
 
 #### Usage
@@ -98,15 +98,15 @@ To ensure the convergence of the sequence $J({\bf p}_k)$, we impose a decrease i
 
 We seek a $\mu$ that satisfies the Armijo condition:
 
-$$ J({\bf p}_k+\mu {\bf d}_k) < J({\bf p}_k) + \alpha \, \mu \, {\bf d}_k ^T \, \nabla J({\bf p}_k) \quad (1). $$
+$$ J({\bf p}_k + \mu {\bf d}_k) < J({\bf p}_k) + \alpha \mu {\bf d}_k ^T \nabla J({\bf p}_k) \quad (1). $$
 
-A suitable $\mu$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \, \nabla J({\bf p}_k) \, <\, 0$.
+A suitable $\mu$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \nabla J({\bf p}_k) < 0$.
 
 The Armijo Rule is implemented as follows:
 
 1. Start with an initial value $\mu = 1$.
 2. While condition $(1)$ is not satisfied:
-   - Adjust $\mu$ to $\beta \, \mu$.
+   - Adjust $\mu$ to $\beta \mu$.
 
 #### Algorithm
 
@@ -117,7 +117,7 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
 3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
 
 #### Usage
 
@@ -151,11 +151,11 @@ In L1 optimization, the descent direction is not necessarily $-\nabla J({\bf p_k
 
 Here, we choose the steepest descent in the case of the $\ell_1$ norm: the descent direction $d_k$ follows the vector of the canonical basis with the highest partial derivative in absolute value.
 
-$ {\bf d}_k = -\langle \nabla J({\bf p}_k),e_i \rangle \, e_i $
+${\bf d}_k = -\langle \nabla J({\bf p}_k),e_i \rangle e_i$
 
 where $i$ is the smallest index such that:
 
-$ \left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}  $
+$\left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}$
 
 #### Algorithm
 
@@ -166,7 +166,7 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k$ = $-\langle \nabla J({\bf p}_k),e_i \rangle \, e_i$.
 3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
 
 
 #### Usage
