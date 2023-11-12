@@ -229,9 +229,6 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 import numpy as np
 from descent.figure3d import Rosenbrock
 from descent.gradient import GradientDescentFletcherReeves
-from descent.gradient import GradientDescentConstant
-from descent.gradient import GradientDescentOptimalStep
-from descent.gradient import GradientDescentL1Optimisation
 
 x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
 x = np.stack((x, y), axis=-1)
