@@ -202,13 +202,33 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 
 ![GradientDescentL1Optimization](./images/gd_l1.png)
 
+### Gradient Descent with compose gradient, Fletcher-Reeves
 
-### Gradient descent comparison
+#### Mathematical Background
 
-You can plot the different gradient descent methods on the same figure as followed:
+In the Fletcher-Reeves method, the descent direction is modified by adding to the opposite of the gradient a term that depends on the previous descent directions. This choice of descent is made to make two descent directions orthogonal for the scalar product that comes from the Hessian.
+
+$d_k$ is defined by the following relation:
+
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
+
+#### Algorithm
+
+The algorithm is the same as the one with an optimal step, except for the descent direction ${\bf d}_k$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the Fletcher-Reeves method.
+2. Compute the step size $\mu$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+
+#### Usage
 
 ```python
 import numpy as np
+from descent.figure3d import Rosenbrock
+from descent.gradient import GradientDescentFletcherReeves
 from descent.gradient import GradientDescentConstant
 from descent.gradient import GradientDescentOptimalStep
 from descent.gradient import GradientDescentL1Optimisation
@@ -220,22 +240,113 @@ rosenbrock = Rosenbrock(100)
 x0 = np.array([0, 2])
 mu = 0.00001
 
-gd_constant = GradientDescentConstant()
-res_gd_constant = gd_constant(rosenbrock, x0, mu)
-
-gd_optimal = GradientDescentOptimalStep()
-res_gd_optimal = gd_optimal(rosenbrock, x0)
-
-gd_l1 = GradientDescentL1Optimisation()
-res_gd_l1 = gd_l1(rosenbrock, x0)
+gd_fletcherR = GradientDescentFletcherReeves()
+res_gd_fr = gd_fletcherR(rosenbrock, x0)
 
 descents = {
-    "gd_constant": res_gd_constant,
-    "gd_optimal": res_gd_optimal,
-    "gd_l1": res_gd_l1,
+    "gd_fletcherR": res_gd_fr,
 }
 
 rosenbrock.figure(x, descent=descents, plot_contour=True)
+```
+
+![GradientDescentFletcherReeves](./images/gd_fr.png)
+
+
+### Gradient Descent with compose gradient, Polack-Ribière
+
+#### Mathematical Background
+
+An alternative method is that proposed by Polack-Ribière.
+
+$d_k$ is then defined by the following relation:
+
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
+
+#### Algorithm
+
+The algorithm is the same as the one with an optimal step, except for the descent direction ${\bf d}_k$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the Polack-Ribière method.
+2. Compute the step size $\mu$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.gradient import GradientDescentPolackRibiere
+from descent.figure3d import Rosenbrock
+
+x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
+x = np.stack((x, y), axis=-1)
+rosenbrock = Rosenbrock(100)
+
+x0 = np.array([0, 2])
+mu = 0.00001
+
+gd_polackR = GradientDescentPolackRibiere()
+res_gd_pr = gd_polackR(rosenbrock, x0)
+
+descents = {
+    "gd_polackR": res_gd_pr,
+}
+
+rosenbrock.figure(x, descent=descents, plot_contour=True)
+```
+
+![GradientDescentPolackRibiere](./images/gd_pr.png)
+
+### Gradient descent comparison
+
+You can plot the different gradient descent methods on the same figure as followed:
+
+```python
+import numpy as np
+from descent.figure3d import QuadraticN
+from descent.gradient import GradientDescentConstant
+from descent.gradient import GradientDescentOptimalStep
+from descent.gradient import GradientDescentL1Optimisation
+from descent.gradient import GradientDescentFletcherReeves
+from descent.gradient import GradientDescentPolackRibiere 
+from descent.functions import create_system
+
+A, b = create_system(2, 3)
+x_exact = np.ones(2, dtype=np.float64)
+b = A @ x_exact
+x0 = np.zeros(2, dtype=np.float64)
+
+quadratic_n = QuadraticN(A, b)
+
+gd_constant = GradientDescentConstant()
+res_constant = gd_constant(quadratic_n, x0, mu = 0.9 / 1000)
+
+gd_optimal = GradientDescentOptimalStep()
+res_optimal = gd_optimal(quadratic_n, x0)
+
+gd_l1 = GradientDescentL1Optimisation()
+res_l1 = gd_l1(quadratic_n, x0)
+
+gd_fr = GradientDescentFletcherReeves()
+res_fr = gd_fr(quadratic_n, x0)
+
+gd_pr = GradientDescentPolackRibiere()
+res_pr = gd_pr(quadratic_n, x0)
+
+x, y = np.linspace(-0.1, 1.1, 150), np.linspace(-0.1, 1.3, 150)
+X = np.stack((x, y), axis=-1)
+
+descent = {
+    'constant': res_constant,
+    'optimal': res_optimal,
+    'l1': res_l1,
+    'FletcherR': res_fr,
+    'PolackR': res_pr
+}
+
+quadratic_n.figure(X, descent=descent, plot_contour=True, view=(30, 30))
 ```
 
 ![GradientDescentComparison](./images/all_opti.png)

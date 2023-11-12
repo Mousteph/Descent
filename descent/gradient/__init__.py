@@ -3,6 +3,8 @@ from .gradient_descent import GradientDescent
 from .gd_constant import GradientDescentConstant
 from .gd_optimal_step import GradientDescentOptimalStep
 from .gd_l1_optimisation import GradientDescentL1Optimisation
+from .gd_fletcher_reeves import GradientDescentFletcherReeves
+from .gd_polack_ribiere import GradientDescentPolackRibiere
 
 __all__ = [
     "partial",
@@ -10,5 +12,7 @@ __all__ = [
     "GradientDescent",
     "GradientDescentConstant",
     "GradientDescentOptimalStep",
-    "GradientDescentL1Optimisation"
+    "GradientDescentL1Optimisation",
+    "GradientDescentFletcherReeves",
+    "GradientDescentPolackRibiere",
 ]
