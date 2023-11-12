@@ -13,7 +13,8 @@ class GradientDescentConstant(GradientDescent):
         """
 
         return f"{self.__class__.__name__}({self.__last_mu})"
-        
+    
+    @GradientDescent.calculate_time 
     def __call__(self, f: Callable[[np.array], float], x0: np.array, 
                  mu: float = 0.001, eps: float = 1E-6,
                  max_iter: int = 10000, detect_div: float = 10e5) -> np.array:

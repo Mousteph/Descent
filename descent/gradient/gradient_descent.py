@@ -1,3 +1,6 @@
+from time import time
+from typing import Callable
+
 class GradientDescent:
     def __name__(self) -> str:
         """
@@ -46,6 +49,39 @@ class GradientDescent:
 
         self.last_cost = cost
         self.last_nb_it = it
+    
+    @staticmethod
+    def calculate_time(f: Callable):
+        """
+        Decorator to calculate the execution time of a function.
+
+        Args:
+            f (Callable): The function whose execution time is to be calculated.
+
+        Returns:
+            Callable: The decorated function which will return the function result and also save the execution time.
+        """
+
+        def save_time(self, *args, **kwargs):
+            """
+            Inner function to save the execution time of the function 'f'.
+
+            Args:
+                self: The instance of the class where the decorated function is defined.
+                *args: Variable length argument list for the function 'f'.
+                **kwargs: Arbitrary keyword arguments for the function 'f'.
+
+            Returns:
+                The result of the function 'f'.
+            """
+
+            time_start = time()
+            res = f(self, *args, **kwargs)
+            time_end = time()
+            self.__time = time_end - time_start
+            return res
+
+        return save_time
             
     def __init__(self) -> None:
         """
@@ -55,10 +91,12 @@ class GradientDescent:
         self.last_norm = None
         self.last_cost = None
         self.last_nb_it = None
+        self.__time = -1
         
     def get_report(self) -> None:
         """
         Prints the report.
         """
 
-        print(f"{self.__name__()}: Number of iterations: {self.last_nb_it} | Last Cost: {self.last_cost}")
+        print(f"{self.__name__()}: Number of iterations: {self.last_nb_it} | "\
+              f"Last Cost: {self.last_cost} | Time: {round(self.__time, 4)}s")

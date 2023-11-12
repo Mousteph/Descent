@@ -1,4 +1,4 @@
-from .gd_optimal_step import GradientDescentOptimalStep
+from .gd_optimal_step import GradientDescentOptimalStep, GradientDescent
 import numpy as np
 from typing import Callable
 from .helpers import gradient
@@ -24,6 +24,7 @@ class GradientDescentL1Optimisation(GradientDescentOptimalStep):
 
         return dk
 
+    @GradientDescent.calculate_time
     def __call__(self, f: Callable[[np.array], float], x0: np.array, eps: float = 1E-6,
                  max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
         """
