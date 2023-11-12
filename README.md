@@ -238,8 +238,54 @@ descents = {
 rosenbrock.figure(x, descent=descents, plot_contour=True)
 ```
 
-![GradientDescentL1Optimization](./images/gd_fr.png)
+![GradientDescentFletcherReeves](./images/gd_fr.png)
 
+
+### Gradient Descent with compose gradient, Polack-Ribière
+
+#### Mathematical Background
+
+An alternative method is that proposed by Polack-Ribière.
+
+$d_k$ is then defined by the following relation:
+
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
+
+#### Algorithm
+
+The algorithm is the same as the one with an optimal step, except for the descent direction ${\bf d}_k$.
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the Polack-Ribière method.
+2. Compute the step size $\mu$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.gradient import GradientDescentPolackRibiere
+from descent.figure3d import Rosenbrock
+
+x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
+x = np.stack((x, y), axis=-1)
+rosenbrock = Rosenbrock(100)
+
+x0 = np.array([0, 2])
+mu = 0.00001
+
+gd_polackR = GradientDescentPolackRibiere()
+res_gd_pr = gd_polackR(rosenbrock, x0)
+
+descents = {
+    "gd_polackR": res_gd_pr,
+}
+
+rosenbrock.figure(x, descent=descents, plot_contour=True)
+```
+
+![GradientDescentPolackRibiere](./images/gd_pr.png)
 
 ### Gradient descent comparison
 
@@ -251,6 +297,7 @@ from descent.gradient import GradientDescentConstant
 from descent.gradient import GradientDescentOptimalStep
 from descent.gradient import GradientDescentL1Optimisation
 from descent.gradient import GradientDescentFletcherReeves
+from descent.gradient import GradientDescentPolackRibiere
 
 x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
 x = np.stack((x, y), axis=-1)
@@ -271,11 +318,15 @@ res_gd_l1 = gd_l1(rosenbrock, x0)
 gd_fletcherR = GradientDescentFletcherReeves()
 res_gd_fr = gd_fletcherR(rosenbrock, x0)
 
+gd_polackR = GradientDescentPolackRibiere()
+res_gd_pr = gd_polackR(rosenbrock, x0)
+
 descents = {
     "gd_constant": res_gd_constant,
     "gd_optimal": res_gd_optimal,
     "gd_l1": res_gd_l1,
     "gd_fletcherR": res_gd_fr,
+    "gd_polackR": res_gd_pr,
 }
 
 rosenbrock.figure(x, descent=descents, plot_contour=True)
