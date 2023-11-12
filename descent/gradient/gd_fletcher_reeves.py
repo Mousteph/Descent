@@ -5,6 +5,26 @@ from typing import Callable
 
 
 class GradientDescentFletcherReeves(GradientDescentOptimalStep):
+    def __init__(self):
+        super().__init__()
+        self.__last_grad = (None, None)
+
+    def __get_last_grad(self, f: Callable[[np.array], float], xk: np.array) -> np.array:
+        """A function to get the last gradient.
+
+        Args:
+            f (Callable[[np.array], float]): Function to compute the gradient.
+            xk (np.array): Value where the gradient is computed.
+
+        Returns:
+            np.array: The gradient.
+        """
+        
+        if np.array_equal(xk, self.__last_grad[0]):
+            return self.__last_grad[1]
+        
+        return gradient(f, xk)
+        
     def gradient_compose_dk_FR(self, f: Callable[[np.array], float], xk: np.array,
                                x0: np.array, dk: np.array) -> np.array:
         """
@@ -21,8 +41,12 @@ class GradientDescentFletcherReeves(GradientDescentOptimalStep):
         """
 
         grad = gradient(f, xk)
-    
-        return -grad + (np.linalg.norm(grad) ** 2 / np.linalg.norm(gradient(f, x0))**2) * dk
+        grad_x0 = self.__get_last_grad(f, x0)
+        dk = -grad + (np.linalg.norm(grad) ** 2 / np.linalg.norm(grad_x0)**2) * dk
+
+        self.__last_grad = (xk, grad)
+        
+        return dk
     
     def __call__(self, f: Callable[[np.array], float], x0: np.array, eps: float = 1E-6,
                  max_iter: int = 10000, detect_div: float = 10e5):
