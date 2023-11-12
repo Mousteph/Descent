@@ -199,7 +199,7 @@ rosenbrock.figure(x, descent=descents, plot_contour=True)
 
 In the Fletcher-Reeves method, the descent direction is modified by adding to the opposite of the gradient a term that depends on the previous descent directions. This choice of descent is made to make two descent directions orthogonal for the scalar product that comes from the Hessian.
 
-$ d_k $ is defined by the following relation:
+$d_k$ is defined by the following relation:
 
 $d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
 
@@ -238,7 +238,7 @@ descents = {
 rosenbrock.figure(x, descent=descents, plot_contour=True)
 ```
 
-![GradientDescentL1Optimization](./images/gd_rf.png)
+![GradientDescentL1Optimization](./images/gd_fr.png)
 
 
 ### Gradient descent comparison
