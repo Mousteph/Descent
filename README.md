@@ -160,7 +160,9 @@ ${\bf d}_k = -\langle \nabla J({\bf p}_k),e_i \rangle e_i$
 
 where $i$ is the smallest index such that:
 
-$$\left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty}$$
+ ```math
+ \left| \dfrac{\partial J}{\partial x_i}({\bf p}_k) \right| = \|\nabla J({\bf p}_k)\|_{\infty} $$
+ ```
 
 #### Algorithm
 
