@@ -1,4 +1,5 @@
 from .gradient_descent import GradientDescent
+from .helpers import gradient
 from typing import Callable
 import numpy as np
 
@@ -13,7 +14,7 @@ class GradientDescentConstant(GradientDescent):
 
         return f"{self.__class__.__name__}({self.__last_mu})"
         
-    def __call__(self, f: Callable[[np.array], float], pk: np.array, 
+    def __call__(self, f: Callable[[np.array], float], x0: np.array, 
                  mu: float = 0.001, eps: float = 1E-6,
                  max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
         """
@@ -21,7 +22,7 @@ class GradientDescentConstant(GradientDescent):
 
         Args:
             f (Callable[[np.array], float]): The function to minimize.
-            pk (np.array): The initial point.
+            x0 (np.array): The initial point.
             mu (float, optional): The step size. Defaults to 0.001.
             eps (float, optional): The precision. Defaults to 1E-6.
             max_iter (int, optional): The maximum number of iterations. Defaults to 10000.
@@ -32,24 +33,23 @@ class GradientDescentConstant(GradientDescent):
         """
 
         self.__last_mu = mu
+        pk, norm = x0, eps
         
-        pk1 = pk - mu * self.gradient(f, pk)
-        l = [pk]
+        points = [x0]
         i = 0
         
-        norm = np.linalg.norm(pk1 - pk, 2)
-        
-        while i < max_iter and (norm >= eps and norm <= detect_div):            
-            pk, pk1 = pk1, pk1 - mu * self.gradient(f, pk1)
-            norm = np.linalg.norm(pk1 - pk, 2)
+        while i < max_iter and (norm >= eps and norm <= detect_div):
+            dk = -gradient(f, pk)
+            pk1, pk = pk, pk + mu * dk
             
-            l.append(pk)
+            norm = np.linalg.norm(pk1 - pk, 2)
+            points.append(pk)
             i += 1
 
-        l = np.array(l)
+        points = np.array(points)
         
         self._check_max_iter(i, max_iter)
         self._check_norm(norm, detect_div)
-        self._set_report(f(l[-1]), i)
+        self._set_report(f(points[-1]), i)
         
-        return l
+        return points

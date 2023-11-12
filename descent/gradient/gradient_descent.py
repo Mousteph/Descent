@@ -1,5 +1,3 @@
-from .helpers import partial, gradient
-
 class GradientDescent:
     def __name__(self) -> str:
         """
@@ -57,9 +55,6 @@ class GradientDescent:
         self.last_norm = None
         self.last_cost = None
         self.last_nb_it = None
-        
-        self.partial = partial
-        self.gradient = gradient
         
     def get_report(self) -> None:
         """
