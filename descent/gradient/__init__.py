@@ -8,6 +8,7 @@ from .gd_polack_ribiere import GradientDescentPolackRibiere
 from .gd_momentum import GradientDescentMomentumAcceleration
 from .gd_nesterov import GradientDescentNesterovAcceleration
 from .gd_adagrad import GradientDescentAdagrad
+from .gd_adam import GradientDescentAdam
 
 __all__ = [
     "partial",
@@ -21,4 +22,5 @@ __all__ = [
     "GradientDescentMomentumAcceleration",
     "GradientDescentNesterovAcceleration",
     "GradientDescentAdagrad",
+    "GradientDescentAdam",
 ]
