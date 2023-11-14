@@ -6,17 +6,17 @@ from .helpers import gradient
 
 class GradientDescentAdam(GradientDescent):
     @GradientDescent.calculate_time
-    def __call__(self, f: Callable[[np.array], float], x0: np.array, beta1: float = 0.9,
-                 beta2: float = 0.999, alpha: float = 0.01, epszero: float = 1E-8,
+    def __call__(self, f: Callable[[np.array], float], x0: np.array, lr: float = 0.01,
+                 beta1: float = 0.9, beta2: float = 0.999, epszero: float = 1E-8,
                  eps: float = 1E-6, max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
         """Performs the gradient descent with Adam.
 
         Args:
             f (Callable[[np.array], float]): The function to optimize.
             x0 (np.array): The initial point.
+            lr (float, optional): The learning rate. Defaults to 0.01.
             beta1 (float, optional): The decay rate for the moving average of the gradient. Defaults to 0.9.
             beta2 (float, optional): The decay rate for the moving average of the squared gradient. Defaults to 0.999.
-            alpha (float, optional): The learning rate. Defaults to 0.1.
             epszero (float, optional): The smoothing term to avoid division by zero. Defaults to 1E-8.
             eps (float, optional): The precision. Defaults to 1E-6.
             max_iter (int, optional): The maximum number of iterations. Defaults to 10000.
@@ -41,7 +41,7 @@ class GradientDescentAdam(GradientDescent):
             vthat = vt / (1 - beta2**(i + 1))
             dk = (mthat / (np.sqrt(vthat) + epszero))
             
-            pk, pk1 = pk - alpha * dk, pk
+            pk, pk1 = pk - lr * dk, pk
             
             norm = np.linalg.norm(pk1 - pk, 2)
             points.append(pk)

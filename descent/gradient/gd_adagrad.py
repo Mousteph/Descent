@@ -6,7 +6,7 @@ from .helpers import gradient
 
 class GradientDescentAdagrad(GradientDescent):
     @GradientDescent.calculate_time
-    def __call__(self, f: Callable[[np.array], float], x0: np.array, mu: float = 0.01,
+    def __call__(self, f: Callable[[np.array], float], x0: np.array, lr: float = 0.01,
                  epszero: float = 1E-8, eps: float = 1E-6, max_iter: int = 10000,
                  detect_div: float = 10e5) -> np.array:
         """Performs the gradient descent with AdaGrad.
@@ -14,7 +14,7 @@ class GradientDescentAdagrad(GradientDescent):
         Args:
             f (Callable[[np.array], float]): The function to optimize.
             x0 (np.array): The initial point.
-            mu (float, optional): The learning rate. Defaults to 0.01.
+            lr (float, optional): The learning rate. Defaults to 0.01.
             epszero (float, optional): The smoothing term to avoid division by zero. Defaults to 1E-8.
             eps (float, optional): The precision. Defaults to 1E-6.
             max_iter (int, optional): The maximum number of iterations. Defaults to 10000.
@@ -32,7 +32,7 @@ class GradientDescentAdagrad(GradientDescent):
         while i < max_iter and (eps <= norm <= detect_div):
             grad = gradient(f, pk)
             gk = gk + grad**2
-            dk = (mu / np.sqrt(gk + epszero)) * grad
+            dk = (lr / np.sqrt(gk + epszero)) * grad
             pk, pk1 = pk - dk, pk
             
             norm = np.linalg.norm(pk1 - pk, 2)

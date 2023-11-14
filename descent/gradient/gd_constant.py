@@ -16,7 +16,7 @@ class GradientDescentConstant(GradientDescent):
     
     @GradientDescent.calculate_time 
     def __call__(self, f: Callable[[np.array], float], x0: np.array, 
-                 mu: float = 0.001, eps: float = 1E-6,
+                 lr: float = 0.001, eps: float = 1E-6,
                  max_iter: int = 10000, detect_div: float = 10e5) -> np.array:
         """
         Performs the gradient descent with a constant step size.
@@ -24,7 +24,7 @@ class GradientDescentConstant(GradientDescent):
         Args:
             f (Callable[[np.array], float]): The function to minimize.
             x0 (np.array): The initial point.
-            mu (float, optional): The step size. Defaults to 0.001.
+            lr (float, optional): The learning rate. Defaults to 0.001.
             eps (float, optional): The precision. Defaults to 1E-6.
             max_iter (int, optional): The maximum number of iterations. Defaults to 10000.
             detect_div (float, optional): The divergence detection value. Defaults to 10e5.
@@ -33,7 +33,7 @@ class GradientDescentConstant(GradientDescent):
             np.array: The array of points visited during the gradient descent.
         """
 
-        self.__last_mu = mu
+        self.__last_mu = lr
         pk, norm = x0, eps
         
         points = [x0]
@@ -41,7 +41,7 @@ class GradientDescentConstant(GradientDescent):
         
         while i < max_iter and (eps <= norm <= detect_div):
             dk = -gradient(f, pk)
-            pk1, pk = pk, pk + mu * dk
+            pk1, pk = pk, pk + lr * dk
             
             norm = np.linalg.norm(pk1 - pk, 2)
             points.append(pk)
