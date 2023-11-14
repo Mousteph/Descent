@@ -6,6 +6,7 @@ from .gd_l1_optimisation import GradientDescentL1Optimisation
 from .gd_fletcher_reeves import GradientDescentFletcherReeves
 from .gd_polack_ribiere import GradientDescentPolackRibiere
 from .gd_momentum import GradientDescentMomentumAcceleration
+from .gd_nesterov import GradientDescentNesterovAcceleration
 
 __all__ = [
     "partial",
@@ -17,4 +18,5 @@ __all__ = [
     "GradientDescentFletcherReeves",
     "GradientDescentPolackRibiere",
     "GradientDescentMomentumAcceleration",
+    "GradientDescentNesterovAcceleration",
 ]
