@@ -408,7 +408,7 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 
 The gradient descent with Nesterov momentum is defined by the following relation:
 
-$d_k = \gamma d_{k-1} + (1 - \eta) \nabla J(p_k - \gamma d_{k-1})$
+$d_k = \gamma d_{k-1} + \eta \nabla J(p_k - \gamma d_{k-1})$
 
 Where $\gamma$ is the momentum parameter, between 0 and 1.
 
@@ -492,6 +492,58 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentAdagrad](./images/gd_adagrad.png)
+
+
+### Gradient descent with Adam Acceleration
+
+#### Mathematical Background
+
+The gradient descent with Adam acceleration is defined by the following relations:
+
+$m_k = \beta_1 m_{k-1} + (1 - \beta_1) \nabla J(p_k)$
+
+$v_k = \beta_2 v_{k-1} + (1 - \beta_2) \nabla J(p_k)^2$
+
+Where $m_k$ and $v_k$ are respectively the first and second moment of the gradient and $\beta_1$ and $\beta_2$ are the decay rates usually 0.9 for $\beta_1$ and 0.999 for $\beta_2$.
+
+$\hat{m_k} = \dfrac{m_k}{1 - \beta_1^k}$
+
+$\hat{v_k} = \dfrac{v_k}{1 - \beta_2^k}$
+
+$d_k = \dfrac{\hat{m_k}}{\sqrt{\hat{v_k} + \varepsilon}}$
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta{\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentAdam
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_adam= GradientDescentAdam()
+res_gd_adam = gd_adam(beale, x0, lr=0.1)
+
+descent = {
+    "gd_adam": res_gd_adam,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentAdam](./images/gd_adam.png)
 
 
 ## Add your own function
