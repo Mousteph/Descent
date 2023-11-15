@@ -215,7 +215,7 @@ In the Fletcher-Reeves method, the descent direction is modified by adding to th
 
 $d_k$ is defined by the following relation:
 
-$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ with $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
 
 #### Algorithm
 
@@ -263,7 +263,7 @@ An alternative method is that proposed by Polack-Ribière.
 
 $d_k$ is then defined by the following relation:
 
-$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ with $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
 
 #### Algorithm
 
@@ -364,7 +364,7 @@ Momentums are used to accelerate the convergence of the gradient descent. The id
 
 The gradient descent with momentum is defined by the following relation:
 
-$${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \gamma) \nabla J({\bf p}_k)$$
+$d_k = \gamma d_{k-1} + (1 - \gamma) \nabla J(p_k)$ 
 
 Where $\gamma$ is the momentum parameter, between 0 and 1.
 
@@ -408,7 +408,9 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 
 The gradient descent with Nesterov momentum is defined by the following relation:
 
-$${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \eta) \nabla J({\bf p}_k - \gamma {\bf d}_{k-1})$$
+$d_k = \gamma d_{k-1} + (1 - \eta) \nabla J(p_k - \gamma d_{k-1})$
+
+Where $\gamma$ is the momentum parameter, between 0 and 1.
 
 #### Algorithm
 
@@ -442,6 +444,54 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentNesterovAcceleration](./images/gd_nesterov.png)
+
+
+### Gradient descent with Adagrad Acceleration
+
+#### Mathematical Background
+
+The gradient descent with Adagrad acceleration is defined by the following relations:
+
+$G_k = G_{k-1} + \nabla J(p_k)^2$
+
+$d_k = - \dfrac{\nabla J(p_k)}{\sqrt{G_k + \varepsilon}}$
+
+Where $G_k$ is a accumulated gradient and $\varepsilon$ is a small value to avoid division by zero.
+
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta{\bf d}_k$.
+
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentAdagrad
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_adagrad = GradientDescentAdagrad()
+res_gd_adagrad = gd_adagrad(beale, x0, lr=1)
+
+descent = {
+    "gd_adagrad": res_gd_adagrad,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentAdagrad](./images/gd_adagrad.png)
 
 
 ## Add your own function
