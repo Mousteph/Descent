@@ -224,32 +224,32 @@ The algorithm is the same as the one with an optimal step, except for the descen
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Choose a descent direction ${\bf d}_k$ using the Fletcher-Reeves method.
-2. Compute the step size $\mu$ using the Armijo rule.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+2. Compute the learning rate $\eta$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
 
 ```python
 import numpy as np
-from descent.figure3d import Rosenbrock
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentFletcherReeves
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_fletcherR = GradientDescentFletcherReeves()
-res_gd_fr = gd_fletcherR(rosenbrock, x0)
+res_gd_fr = gd_fletcherR(beale, x0)
 
-descents = {
+descent = {
     "gd_fletcherR": res_gd_fr,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentFletcherReeves](./images/gd_fr.png)
@@ -272,31 +272,31 @@ The algorithm is the same as the one with an optimal step, except for the descen
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Choose a descent direction ${\bf d}_k$ using the Polack-Ribière method.
-2. Compute the step size $\mu$ using the Armijo rule.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+2. Compute the learning $\eta$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 #### Usage
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentPolackRibiere
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_polackR = GradientDescentPolackRibiere()
-res_gd_pr = gd_polackR(rosenbrock, x0)
+res_gd_pr = gd_polackR(beale, x0)
 
-descents = {
+descent = {
     "gd_polackR": res_gd_pr,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentPolackRibiere](./images/gd_pr.png)
