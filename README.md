@@ -57,13 +57,13 @@ Different gradient descent methods have been implemented and can be used.
 
 #### Algorithm
 
-To implement Gradient Descent with a fixed step, we begin by selecting a constant step size, denoted as $\mu$, and choose an initial point ${\bf p}_0$.
+To implement Gradient Descent with a fixed step, we begin by selecting a constant step size (learning rate), denoted as $\eta$, and choose an initial point ${\bf p}_0$.
 
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
@@ -71,24 +71,25 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentConstant
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
+lr = 0.001
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_constant = GradientDescentConstant()
-res_gd_constant = gd_constant(rosenbrock, x0, mu)
+res_gd_constant = gd_constant(beale, x0, lr)
 
-descents = {
-    "gd_constant": res_gd_constant,
+descent = {
+    "gd_constant": res_gd_constant
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentConstant](./images/gd_constant.png)
