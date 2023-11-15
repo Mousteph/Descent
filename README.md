@@ -353,6 +353,54 @@ quadratic_n.figure(X, descent=descent, plot_contour=True, view=(30, 30))
 
 ![GradientDescentComparison](./images/all_opti.png)
 
+
+## Gradient descent and Momentum method
+
+Momentums are used to accelerate the convergence of the gradient descent. The idea is to add a term to the descent direction that depends on the previous descent directions. It helps to optimise non convex functions.
+
+### Gradient descent with momentum
+
+#### Mathematical Background
+
+The gradient descent with momentum is defined by the following relation:
+
+${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \gamma) \nabla J({\bf p}_k)$
+
+Where $\gamma$ is the momentum parameter, between 0 and 1.
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentMomentumAcceleration
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_momentum = GradientDescentMomentumAcceleration()
+res_gd_momentum = gd_momentum(beale, x0, lr=0.0001)
+
+descent = {
+    "gd_momentum": res_gd_momentum,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentMomentumAcceleration](./images/gd_momentum.png)
+
 ## Add your own function
 
 ### Add your own figures

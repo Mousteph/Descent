@@ -30,8 +30,8 @@ class GradientDescentMomentumAcceleration(GradientDescent):
         i = 0
         
         while i < max_iter and (eps <= norm <= detect_div):
-            dk = gamma * dk + lr * gradient(f, pk)
-            pk1, pk = pk, pk - dk
+            dk = gamma * dk + (1 - gamma) * gradient(f, pk)
+            pk1, pk = pk, pk - lr * dk
             
             norm = np.linalg.norm(pk1 - pk, 2)
             points.append(pk)
