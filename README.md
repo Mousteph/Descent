@@ -96,56 +96,57 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 
 ### Gradient descent with backtracking, Armijo rule
 
-To enhance the convergence of the algorithm, we introduce a variable step size $\mu$ using the Armijo rule.
+To enhance the convergence of the algorithm, we introduce a variable learning rate $\eta$ using the Armijo rule.
 
 #### Mathematical Background
 
 To ensure the convergence of the sequence $J({\bf p}_k)$, we impose a decrease in its value. The Armijo rule introduces two parameters, $0 < \alpha < 0.5$ and $0 < \beta < 1$.
 
-We seek a $\mu$ that satisfies the Armijo condition:
+We seek a $\eta$ that satisfies the Armijo condition:
 
-$$ J({\bf p}_k + \mu {\bf d}_k) < J({\bf p}_k) + \alpha \mu {\bf d}_k ^T \nabla J({\bf p}_k) \quad (1). $$
+$$ J({\bf p}_k + \eta {\bf d}_k) < J({\bf p}_k) + \alpha \eta {\bf d}_k ^T \nabla J({\bf p}_k) \quad (1). $$
 
-A suitable $\mu$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \nabla J({\bf p}_k) < 0$.
+A suitable $\eta$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \nabla J({\bf p}_k) < 0$.
 
 The Armijo Rule is implemented as follows:
 
-1. Start with an initial value $\mu = 1$.
+1. Start with an initial value $\eta = 1$.
 2. While condition $(1)$ is not satisfied:
-   - Adjust $\mu$ to $\beta \mu$.
+   - Adjust $\eta$ to $\beta \eta$.
 
 #### Algorithm
 
-The algorithm is the same as the one with a fixed step, except for the step size $\mu$.
+The algorithm is the same as the one with a fixed step, except for the learning rate $\eta$.
 
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
-3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Compute the learning rate $\eta$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 #### Usage
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentOptimalStep
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_optimal = GradientDescentOptimalStep()
-res_gd_optimal = gd_optimal(rosenbrock, x0)
+res_gd_optimal = gd_optimal(beale, x0)
 
-descents = {
+descent = {
     "gd_optimal": res_gd_optimal,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentOptimalStep](./images/gd_optimal.png)
