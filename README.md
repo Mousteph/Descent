@@ -364,7 +364,7 @@ Momentums are used to accelerate the convergence of the gradient descent. The id
 
 The gradient descent with momentum is defined by the following relation:
 
-${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \gamma) \nabla J({\bf p}_k)$
+$${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \gamma) \nabla J({\bf p}_k)$$
 
 Where $\gamma$ is the momentum parameter, between 0 and 1.
 
@@ -373,7 +373,7 @@ Where $\gamma$ is the momentum parameter, between 0 and 1.
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Choose a descent direction ${\bf d}_k$ using the previous method.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta {\bf d}_k$.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta {\bf d}_k$.
 
 #### Usage
 
@@ -400,6 +400,49 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentMomentumAcceleration](./images/gd_momentum.png)
+
+
+### Gradient descent with Nesterov momentum
+
+#### Mathematical Background
+
+The gradient descent with Nesterov momentum is defined by the following relation:
+
+$${\bf d}_k = \gamma {\bf d}_{k-1} + (1 - \eta) \nabla J({\bf p}_k - \gamma {\bf d}_{k-1})$$
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentNesterovAcceleration
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_nesterov = GradientDescentNesterovAcceleration()
+res_gd_nesterov = gd_nesterov(beale, x0, lr=0.0001)
+
+descent = {
+    "gd_nesterov": res_gd_nesterov,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentNesterovAcceleration](./images/gd_nesterov.png)
+
 
 ## Add your own function
 
