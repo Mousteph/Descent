@@ -176,8 +176,8 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k$ = $-\langle \nabla J({\bf p}_k),e_i \rangle \, e_i$.
-3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Compute the learning rate $\eta$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
@@ -185,23 +185,24 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentL1Optimisation
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_l1 = GradientDescentL1Optimisation()
-res_gd_l1 = gd_l1(rosenbrock, x0)
+res_gd_l1 = gd_l1(beale, x0)
 
-descents = {
+descent = {
     "gd_l1": res_gd_l1,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentL1Optimization](./images/gd_l1.png)
