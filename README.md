@@ -546,6 +546,55 @@ beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ![GradientDescentAdam](./images/gd_adam.png)
 
 
+### Gradient descent and Momentum comparison
+
+You can plot the different gradient descent methods with momentum on the same figure as followed:
+
+```python
+import numpy as np
+from descent.gradient import GradientDescentConstant
+from descent.gradient import GradientDescentMomentumAcceleration
+from descent.gradient import GradientDescentNesterovAcceleration
+from descent.gradient import GradientDescentAdagrad
+from descent.gradient import GradientDescentAdam
+from descent.figure3d import Beale
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-1, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_constant = GradientDescentConstant()
+res_gd_constant = gd_constant(beale, x0, lr=0.001)
+
+gd_momentum = GradientDescentMomentumAcceleration()
+res_gd_momentum = gd_momentum(beale, x0, lr=0.0001)
+
+gd_nesterov = GradientDescentNesterovAcceleration()
+res_gd_nesterov = gd_nesterov(beale, x0, lr=0.0001)
+
+gd_adagrad = GradientDescentAdagrad()
+res_gd_adagrad = gd_adagrad(beale, x0, lr=1)
+
+dg_adam = GradientDescentAdam()
+res_gd_adam = gd_adam(beale, x0, lr=0.1)
+
+descents = {
+    "gd_constant": res_gd_constant,
+    "gd_momentum": res_gd_momentum,
+    "gd_nesterov": res_gd_nesterov,
+    "gd_adagrad": res_gd_adagrad,
+    "gd_adam": res_gd_adam,
+}
+
+beale.figure(X, descent=descents, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentMomentumComparison](./images/all_opti_mom.png)
+
+
 ## Add your own function
 
 ### Add your own figures
