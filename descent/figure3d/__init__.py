@@ -5,6 +5,8 @@ from .multitrous_3d import Multitrous3D
 from .quadratic_n import QuadraticN
 from .rosenbrock import Rosenbrock
 from .helpers import format_figure_3d
+from .chips import Chips
+from .beale import Beale
 
 __all__ = [
     "Figure3D",
@@ -14,4 +16,6 @@ __all__ = [
     "QuadraticN",
     "Rosenbrock",
     "format_figure_3d",
+    "Chips",
+    "Beale"
 ]

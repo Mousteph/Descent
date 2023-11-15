@@ -17,7 +17,7 @@ class Figure3D:
             str: The name of the class.
         """
 
-        return "Figure3D"
+        return self.__class__.__name__
 
     def __call__(self, x: np.array) -> np.array:
         """
