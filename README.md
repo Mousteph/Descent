@@ -35,13 +35,15 @@ multitrous_2d = Multitrous2D()
 
 This function can be used as followed:
 ```python
-from descent.figure3d import Quadratic3D, Cubic3D, Multitrous3D, Rosenbrock, QuadraticN
+from descent.figure3d import Quadratic3D, Cubic3D, Multitrous3D, Rosenbrock, QuadraticN, Chips, Beale
 
 quadratic_3d = Quadratic3D()
 cubic_3d = Cubic3D()
 multitrous_3d = Multitrous3D()
 rosenbrock = Rosenbrock()
 quadratic_n = QuadraticN() # Quadratic function but with a different conditionning
+chips = Chips()
+beale = Beale()
 ```
 
 ![Figure3D](./images/figure3d.png)
