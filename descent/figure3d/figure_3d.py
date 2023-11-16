@@ -17,7 +17,7 @@ class Figure3D:
             str: The name of the class.
         """
 
-        return "Figure3D"
+        return self.__class__.__name__
 
     def __call__(self, x: np.array) -> np.array:
         """
@@ -106,7 +106,8 @@ class Figure3D:
 
         return fig, ax
 
-    def plot_figure_contour(self, ax: Axes, x: np.array = None, descent: Dict = {}) -> Axes:
+    def plot_figure_contour(self, ax: Axes, x: np.array = None,
+                            descent: Dict = {}) -> Tuple[Axes, Tuple[float, float]]:
         """
         Plots the contour figure on the given axes.
 
@@ -116,7 +117,7 @@ class Figure3D:
             descent (Dict, optional): The descent values. Defaults to {}.
 
         Returns:
-            Axes: The axes with the plotted contour figure.
+            Tuple[Axes, Tuple[float, float]]: The axes with the plotted contour figure and the Z limits.
         """
 
         if x is None:
@@ -136,7 +137,7 @@ class Figure3D:
             
             ax.legend()
 
-        return ax
+        return ax, (Z.min(), Z.max())
     
     def figure(self, x: np.array = None, plot_3d: bool = True, plot_contour: bool = False,
                descent: Dict = {}, view: Tuple[int, int] = None):
@@ -155,20 +156,23 @@ class Figure3D:
         descent = {key: (values, colors[i]) for i, (key, values) in enumerate(descent.items())}
         
         fig = plt.figure(figsize=(12, 6))
+        parameters = {
+            "y_lim": (-5, 5) if x is None else (x[:, 1].min(), x[:, 1].max()),
+            "x_lim": (-5, 5) if x is None else (x[:, 0].min(), x[:, 0].max()),
+        }
 
         if plot_contour:
             ax = fig.add_subplot(1, 1 + plot_3d, 1)
-            ax = self.plot_figure_contour(ax, x, descent)
-            title = f"Contour {self.__name__()}"
-            ax = format_figure_contour_2d(ax, parameters={"title": title})
+            ax, Z = self.plot_figure_contour(ax, x, descent)
+            parameters["title"] = f"Contour {self.__name__()}"
+            parameters["z_lim"] = (Z[0], Z[1])
+            ax = format_figure_contour_2d(ax, parameters=parameters)
         
         if plot_3d:
             ax = fig.add_subplot(1, 1 + plot_contour, 1 + plot_contour, projection='3d')
             fig, ax = self.plot_figure_3d(fig, ax, x, descent, shrink=(0.9 / (2 - plot_contour)))
-            parameters = {
-                "title": f"Surface {self.__name__()}",
-                "view": view,
-            }
+            parameters["title"] = f"Surface {self.__name__()}"
+            parameters["view"] = view
             ax = format_figure_3d(ax, parameters=parameters)
 
         plt.show()

@@ -23,6 +23,11 @@ def format_figure_contour_2d(ax: Axes, parameters: Dict[str, Optional[str]] = {}
     ax.set_xlabel(X_AXIS_LABEL)
     ax.set_ylabel(Y_AXIS_LABEL)
 
+    if parameters.get("x_lim") is not None:
+        ax.set_xlim(*parameters.get("x_lim"))
+    if parameters.get("y_lim") is not None:
+        ax.set_ylim(*parameters.get("y_lim"))
+
     return ax
 
 def format_figure_3d(ax: Axes, parameters: Dict[str, Optional[str]] = {}) -> Axes:
@@ -50,6 +55,13 @@ def format_figure_3d(ax: Axes, parameters: Dict[str, Optional[str]] = {}) -> Axe
     ax.zaxis._axinfo["grid"]['color'] = (1, 1, 1, 0.5)
 
     ax.set_title(parameters.get("title", "Surface Dimension 2"))
+    
+    if parameters.get("x_lim") is not None:
+        ax.set_xlim(*parameters.get("x_lim"))
+    if parameters.get("y_lim") is not None:
+        ax.set_ylim(*parameters.get("y_lim"))
+    if parameters.get("z_lim") is not None:
+        ax.set_zlim(*parameters.get("z_lim"))
         
     view = parameters.get('view')
     if view is not None:

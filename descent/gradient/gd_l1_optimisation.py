@@ -48,8 +48,8 @@ class GradientDescentL1Optimisation(GradientDescentOptimalStep):
         
         while i < max_iter and (eps <= norm <= detect_div):
             dk = self.dsgd(f, pk)
-            mu = self.backtrack(pk, f, dk)
-            pk1, pk = pk, pk + mu * dk
+            lr = self.backtrack(pk, f, dk)
+            pk1, pk = pk, pk + lr * dk
             
             norm = np.linalg.norm(pk1 - pk, 2)
             points.append(pk)

@@ -35,13 +35,15 @@ multitrous_2d = Multitrous2D()
 
 This function can be used as followed:
 ```python
-from descent.figure3d import Quadratic3D, Cubic3D, Multitrous3D, Rosenbrock, QuadraticN
+from descent.figure3d import Quadratic3D, Cubic3D, Multitrous3D, Rosenbrock, QuadraticN, Chips, Beale
 
 quadratic_3d = Quadratic3D()
 cubic_3d = Cubic3D()
 multitrous_3d = Multitrous3D()
 rosenbrock = Rosenbrock()
 quadratic_n = QuadraticN() # Quadratic function but with a different conditionning
+chips = Chips()
+beale = Beale()
 ```
 
 ![Figure3D](./images/figure3d.png)
@@ -55,13 +57,13 @@ Different gradient descent methods have been implemented and can be used.
 
 #### Algorithm
 
-To implement Gradient Descent with a fixed step, we begin by selecting a constant step size, denoted as $\mu$, and choose an initial point ${\bf p}_0$.
+To implement Gradient Descent with a fixed step, we begin by selecting a constant step size (learning rate), denoted as $\eta$, and choose an initial point ${\bf p}_0$.
 
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
@@ -69,80 +71,82 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentConstant
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
+lr = 0.001
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_constant = GradientDescentConstant()
-res_gd_constant = gd_constant(rosenbrock, x0, mu)
+res_gd_constant = gd_constant(beale, x0, lr)
 
-descents = {
-    "gd_constant": res_gd_constant,
+descent = {
+    "gd_constant": res_gd_constant
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentConstant](./images/gd_constant.png)
 
 ### Gradient descent with backtracking, Armijo rule
 
-To enhance the convergence of the algorithm, we introduce a variable step size $\mu$ using the Armijo rule.
+To enhance the convergence of the algorithm, we introduce a variable learning rate $\eta$ using the Armijo rule.
 
 #### Mathematical Background
 
 To ensure the convergence of the sequence $J({\bf p}_k)$, we impose a decrease in its value. The Armijo rule introduces two parameters, $0 < \alpha < 0.5$ and $0 < \beta < 1$.
 
-We seek a $\mu$ that satisfies the Armijo condition:
+We seek a $\eta$ that satisfies the Armijo condition:
 
-$$ J({\bf p}_k + \mu {\bf d}_k) < J({\bf p}_k) + \alpha \mu {\bf d}_k ^T \nabla J({\bf p}_k) \quad (1). $$
+$$ J({\bf p}_k + \eta {\bf d}_k) < J({\bf p}_k) + \alpha \eta {\bf d}_k ^T \nabla J({\bf p}_k) \quad (1). $$
 
-A suitable $\mu$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \nabla J({\bf p}_k) < 0$.
+A suitable $\eta$ exists whenever ${\bf d}_k$ is a descent direction, meaning ${\bf d}_k ^T \nabla J({\bf p}_k) < 0$.
 
 The Armijo Rule is implemented as follows:
 
-1. Start with an initial value $\mu = 1$.
+1. Start with an initial value $\eta = 1$.
 2. While condition $(1)$ is not satisfied:
-   - Adjust $\mu$ to $\beta \mu$.
+   - Adjust $\eta$ to $\beta \eta$.
 
 #### Algorithm
 
-The algorithm is the same as the one with a fixed step, except for the step size $\mu$.
+The algorithm is the same as the one with a fixed step, except for the learning rate $\eta$.
 
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k = - \nabla J({\bf p}_k)$.
-3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Compute the learning rate $\eta$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 #### Usage
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentOptimalStep
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_optimal = GradientDescentOptimalStep()
-res_gd_optimal = gd_optimal(rosenbrock, x0)
+res_gd_optimal = gd_optimal(beale, x0)
 
-descents = {
+descent = {
     "gd_optimal": res_gd_optimal,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentOptimalStep](./images/gd_optimal.png)
@@ -172,8 +176,8 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 1. Compute the gradient of the objective function $J$ at the current point: $\nabla J({\bf p}_k)$.
 2. Choose a descent direction ${\bf d}_k$ = $-\langle \nabla J({\bf p}_k),e_i \rangle \, e_i$.
-3. Compute the step size $\mu$ using the Armijo rule.
-4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu {\bf d}_k$.
+3. Compute the learning rate $\eta$ using the Armijo rule.
+4. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
@@ -181,23 +185,24 @@ As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\vareps
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentL1Optimisation
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_l1 = GradientDescentL1Optimisation()
-res_gd_l1 = gd_l1(rosenbrock, x0)
+res_gd_l1 = gd_l1(beale, x0)
 
-descents = {
+descent = {
     "gd_l1": res_gd_l1,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentL1Optimization](./images/gd_l1.png)
@@ -210,7 +215,7 @@ In the Fletcher-Reeves method, the descent direction is modified by adding to th
 
 $d_k$ is defined by the following relation:
 
-$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ with $\beta_k = \dfrac{\|\nabla J(x_k)\|^2}{\|\nabla J(x_{k-1})\|^2}$
 
 #### Algorithm
 
@@ -219,32 +224,32 @@ The algorithm is the same as the one with an optimal step, except for the descen
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Choose a descent direction ${\bf d}_k$ using the Fletcher-Reeves method.
-2. Compute the step size $\mu$ using the Armijo rule.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+2. Compute the learning rate $\eta$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 
 #### Usage
 
 ```python
 import numpy as np
-from descent.figure3d import Rosenbrock
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentFletcherReeves
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_fletcherR = GradientDescentFletcherReeves()
-res_gd_fr = gd_fletcherR(rosenbrock, x0)
+res_gd_fr = gd_fletcherR(beale, x0)
 
-descents = {
+descent = {
     "gd_fletcherR": res_gd_fr,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentFletcherReeves](./images/gd_fr.png)
@@ -258,7 +263,7 @@ An alternative method is that proposed by Polack-Ribière.
 
 $d_k$ is then defined by the following relation:
 
-$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ avec $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
+$d_k = -\nabla J(x_k) + \beta_k d_{k-1}$ with $\beta_k = \dfrac{\nabla J(x_k)^T (\nabla J(x_k) - \nabla J(x_{k-1}))}{\|\nabla J(x_{k-1})\|^2}$
 
 #### Algorithm
 
@@ -267,31 +272,31 @@ The algorithm is the same as the one with an optimal step, except for the descen
 As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
 
 1. Choose a descent direction ${\bf d}_k$ using the Polack-Ribière method.
-2. Compute the step size $\mu$ using the Armijo rule.
-3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \mu \, {\bf d}_k$.
+2. Compute the learning $\eta$ using the Armijo rule.
+3. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k + \eta {\bf d}_k$.
 
 #### Usage
 
 ```python
 import numpy as np
+from descent.figure3d import Beale
 from descent.gradient import GradientDescentPolackRibiere
-from descent.figure3d import Rosenbrock
 
-x, y = np.linspace(-1, 1.5, 200), np.linspace(-0.5, 2, 200)
-x = np.stack((x, y), axis=-1)
-rosenbrock = Rosenbrock(100)
+beale = Beale()
+x0 = np.array([2, -2])
 
-x0 = np.array([0, 2])
-mu = 0.00001
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
 
 gd_polackR = GradientDescentPolackRibiere()
-res_gd_pr = gd_polackR(rosenbrock, x0)
+res_gd_pr = gd_polackR(beale, x0)
 
-descents = {
+descent = {
     "gd_polackR": res_gd_pr,
 }
 
-rosenbrock.figure(x, descent=descents, plot_contour=True)
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
 ```
 
 ![GradientDescentPolackRibiere](./images/gd_pr.png)
@@ -347,6 +352,248 @@ quadratic_n.figure(X, descent=descent, plot_contour=True, view=(30, 30))
 ```
 
 ![GradientDescentComparison](./images/all_opti.png)
+
+
+## Gradient descent and Momentum method
+
+Momentums are used to accelerate the convergence of the gradient descent. The idea is to add a term to the descent direction that depends on the previous descent directions. It helps to optimise non convex functions.
+
+### Gradient descent with momentum
+
+#### Mathematical Background
+
+The gradient descent with momentum is defined by the following relation:
+
+$d_k = \gamma d_{k-1} + (1 - \gamma) \nabla J(p_k)$ 
+
+Where $\gamma$ is the momentum parameter, between 0 and 1.
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentMomentumAcceleration
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_momentum = GradientDescentMomentumAcceleration()
+res_gd_momentum = gd_momentum(beale, x0, lr=0.0001)
+
+descent = {
+    "gd_momentum": res_gd_momentum,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentMomentumAcceleration](./images/gd_momentum.png)
+
+
+### Gradient descent with Nesterov momentum
+
+#### Mathematical Background
+
+The gradient descent with Nesterov momentum is defined by the following relation:
+
+$d_k = \gamma d_{k-1} + \eta \nabla J(p_k - \gamma d_{k-1})$
+
+Where $\gamma$ is the momentum parameter, between 0 and 1.
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - {\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentNesterovAcceleration
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_nesterov = GradientDescentNesterovAcceleration()
+res_gd_nesterov = gd_nesterov(beale, x0, lr=0.0001)
+
+descent = {
+    "gd_nesterov": res_gd_nesterov,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentNesterovAcceleration](./images/gd_nesterov.png)
+
+
+### Gradient descent with Adagrad Acceleration
+
+#### Mathematical Background
+
+The gradient descent with Adagrad acceleration is defined by the following relations:
+
+$G_k = G_{k-1} + \nabla J(p_k)^2$
+
+$d_k = - \dfrac{\nabla J(p_k)}{\sqrt{G_k + \varepsilon}}$
+
+Where $G_k$ is a accumulated gradient and $\varepsilon$ is a small value to avoid division by zero.
+
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta{\bf d}_k$.
+
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentAdagrad
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_adagrad = GradientDescentAdagrad()
+res_gd_adagrad = gd_adagrad(beale, x0, lr=1)
+
+descent = {
+    "gd_adagrad": res_gd_adagrad,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentAdagrad](./images/gd_adagrad.png)
+
+
+### Gradient descent with Adam Acceleration
+
+#### Mathematical Background
+
+The gradient descent with Adam acceleration is defined by the following relations:
+
+$m_k = \beta_1 m_{k-1} + (1 - \beta_1) \nabla J(p_k)$
+
+$v_k = \beta_2 v_{k-1} + (1 - \beta_2) \nabla J(p_k)^2$
+
+Where $m_k$ and $v_k$ are respectively the first and second moment of the gradient and $\beta_1$ and $\beta_2$ are the decay rates usually 0.9 for $\beta_1$ and 0.999 for $\beta_2$.
+
+$\hat{m_k} = \dfrac{m_k}{1 - \beta_1^k}$
+
+$\hat{v_k} = \dfrac{v_k}{1 - \beta_2^k}$
+
+$d_k = \dfrac{\hat{m_k}}{\sqrt{\hat{v_k} + \varepsilon}}$
+
+#### Algorithm
+
+As long as the norm $|| {\bf p}_{k+1} - {\bf p}_k|| > \varepsilon$ with $\varepsilon$ a small value:
+
+1. Choose a descent direction ${\bf d}_k$ using the previous method.
+2. Move in this direction: ${\bf p}_{k+1} = {\bf p}_k - \eta{\bf d}_k$.
+
+#### Usage
+
+```python
+import numpy as np
+from descent.figure3d import Beale
+from descent.gradient import GradientDescentAdam
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-2, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_adam= GradientDescentAdam()
+res_gd_adam = gd_adam(beale, x0, lr=0.1)
+
+descent = {
+    "gd_adam": res_gd_adam,
+}
+
+beale.figure(X, descent=descent, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentAdam](./images/gd_adam.png)
+
+
+### Gradient descent and Momentum comparison
+
+You can plot the different gradient descent methods with momentum on the same figure as followed:
+
+```python
+import numpy as np
+from descent.gradient import GradientDescentConstant
+from descent.gradient import GradientDescentMomentumAcceleration
+from descent.gradient import GradientDescentNesterovAcceleration
+from descent.gradient import GradientDescentAdagrad
+from descent.gradient import GradientDescentAdam
+from descent.figure3d import Beale
+
+beale = Beale()
+x0 = np.array([2, -2])
+
+x = np.linspace(-1, 3.2, 100)
+y = np.linspace(-2.3, 2, 100)
+X = np.stack((x, y), axis=-1)
+
+gd_constant = GradientDescentConstant()
+res_gd_constant = gd_constant(beale, x0, lr=0.001)
+
+gd_momentum = GradientDescentMomentumAcceleration()
+res_gd_momentum = gd_momentum(beale, x0, lr=0.0001)
+
+gd_nesterov = GradientDescentNesterovAcceleration()
+res_gd_nesterov = gd_nesterov(beale, x0, lr=0.0001)
+
+gd_adagrad = GradientDescentAdagrad()
+res_gd_adagrad = gd_adagrad(beale, x0, lr=1)
+
+dg_adam = GradientDescentAdam()
+res_gd_adam = gd_adam(beale, x0, lr=0.1)
+
+descents = {
+    "gd_constant": res_gd_constant,
+    "gd_momentum": res_gd_momentum,
+    "gd_nesterov": res_gd_nesterov,
+    "gd_adagrad": res_gd_adagrad,
+    "gd_adam": res_gd_adam,
+}
+
+beale.figure(X, descent=descents, plot_contour=True, view=(20, 50))
+```
+
+![GradientDescentMomentumComparison](./images/all_opti_mom.png)
+
 
 ## Add your own function
 

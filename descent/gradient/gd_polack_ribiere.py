@@ -68,8 +68,8 @@ class GradientDescentPolackRibiere(GradientDescentOptimalStep):
         """
         
         dk = -gradient(f, x0)
-        mu = self.backtrack(x0, f, dk)
-        pk1, pk = x0, x0 + mu * dk
+        lr = self.backtrack(x0, f, dk)
+        pk1, pk = x0, x0 + lr * dk
         
         points = [pk1, pk]
         i = 0
@@ -78,8 +78,8 @@ class GradientDescentPolackRibiere(GradientDescentOptimalStep):
         
         while i < max_iter and (eps <= norm <= detect_div):
             dk = self.gradient_compose(f, pk, pk1, dk)
-            mu = self.backtrack(pk, f, dk)
-            pk1, pk = pk, pk + mu * dk
+            lr = self.backtrack(pk, f, dk)
+            pk1, pk = pk, pk + lr * dk
             
             norm = np.linalg.norm(pk1 - pk, 2)
             points.append(pk)
